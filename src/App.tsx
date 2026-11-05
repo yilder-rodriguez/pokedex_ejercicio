@@ -5,6 +5,7 @@ import { PokemonResult } from '@/components/pokemon-result'
 import { TrainerPanel } from '@/components/trainer-panel'
 import { Backpack } from '@/components/backpack'
 import { BackgroundWatermark } from '@/components/background-watermark'
+import { Toaster } from '@/components/toaster'
 import { normalizeQuery } from '@/lib/pokemon'
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
           <Backpack onSelect={(id) => search(String(id))} />
         </aside>
       </main>
+      <Toaster />
     </div>
   )
 }

@@ -83,6 +83,10 @@ export function spriteUrl(id: number) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
 }
 
+export function artworkUrl(id: number) {
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
+}
+
 export function formatNumber(id: number) {
   return `#${String(id).padStart(4, '0')}`
 }

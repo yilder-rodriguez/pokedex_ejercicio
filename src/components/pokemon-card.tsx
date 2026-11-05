@@ -6,6 +6,7 @@ import { Pokeball } from '@/components/pokeball'
 import { PokemonArtwork } from '@/components/pokemon-artwork'
 import { PokemonStats } from '@/components/pokemon-stats'
 import { addToBackpack, useTrainerStore } from '@/lib/trainer-store'
+import { toast } from '@/lib/toast-store'
 import { MAX_POKEMON_ID, capitalize, formatNumber, getArtwork, getTypeColor, type PokemonApiResponse } from '@/lib/pokemon'
 
 type Props = {
@@ -21,12 +22,17 @@ export function PokemonCard({ pokemon, loading, onNavigate }: Props) {
   const alreadySaved = activeTrainer?.backpack.some((p) => p.id === pokemon.id) ?? false
 
   const handleSave = () => {
-    addToBackpack({
-      id: pokemon.id,
-      name: pokemon.name,
-      sprite: pokemon.sprites.front_default ?? getArtwork(pokemon),
-      types,
-    })
+    try {
+      addToBackpack({
+        id: pokemon.id,
+        name: pokemon.name,
+        sprite: pokemon.sprites.front_default ?? getArtwork(pokemon),
+        types,
+      })
+      toast(`¡${capitalize(pokemon.name)} guardado en la mochila!`)
+    } catch (error) {
+      toast((error as Error).message, 'error')
+    }
   }
 
   return (
