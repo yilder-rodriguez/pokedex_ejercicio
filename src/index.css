@@ -85,24 +85,24 @@
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --background: oklch(0.17 0.014 260);
+  --foreground: oklch(0.96 0.005 260);
+  --card: oklch(0.215 0.016 260);
+  --card-foreground: oklch(0.96 0.005 260);
+  --popover: oklch(0.215 0.016 260);
+  --popover-foreground: oklch(0.96 0.005 260);
+  --primary: oklch(0.58 0.2 27);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.28 0.018 260);
+  --secondary-foreground: oklch(0.96 0.005 260);
+  --muted: oklch(0.26 0.016 260);
+  --muted-foreground: oklch(0.74 0.015 260);
+  --accent: oklch(0.82 0.15 90);
+  --accent-foreground: oklch(0.22 0.04 70);
+  --destructive: oklch(0.65 0.2 25);
+  --border: oklch(1 0 0 / 11%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.65 0.19 27);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -118,48 +118,255 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    color-scheme: dark;
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
-  }
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Smooth theme switch, applied only for a moment while toggling */
+html.theme-switching,
+html.theme-switching * {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease,
+    fill 0.35s ease !important;
+}
+
+/* Background watermark */
+@property --wm-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+.watermark-tint {
+  background:
+    radial-gradient(ellipse 60% 55% at 80% 25%, color-mix(in oklch, var(--wm-color) 22%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 5% 95%, color-mix(in oklch, var(--wm-color) 14%, transparent), transparent 70%);
+  transition: --wm-color 0.8s ease;
+}
+.dark .watermark-tint {
+  opacity: 0.75;
+}
+
+.watermark-layer {
+  position: absolute;
+  top: 10vh;
+  right: -10vw;
+  width: min(90vw, 780px);
+  aspect-ratio: 1;
+  rotate: -14deg;
+  opacity: 0.09;
+  filter: blur(2px) saturate(1.1);
+  mix-blend-mode: multiply;
+}
+.watermark-pokeball {
+  opacity: 0.05;
+  filter: grayscale(1) blur(1px);
+}
+.dark .watermark-layer {
+  opacity: 0.07;
+  mix-blend-mode: screen;
+  filter: blur(2px) brightness(1.15);
+}
+.dark .watermark-pokeball {
+  opacity: 0.04;
+  filter: grayscale(1) invert(1) blur(1px);
+}
+.watermark-in {
+  animation: wm-in 0.8s ease both;
+}
+.watermark-out {
+  animation: wm-out 0.8s ease forwards;
+}
+@keyframes wm-in {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+@keyframes wm-out {
+  to {
+    opacity: 0;
+    scale: 1.05;
+  }
+}
+
+/* 3D artwork */
+.artwork-panel {
+  background-image: radial-gradient(circle at 50% 45%, color-mix(in oklch, var(--type-color) 28%, transparent), transparent 65%);
+}
+.tilt-scene {
+  position: relative;
+  width: 100%;
+  max-width: 16rem;
+  aspect-ratio: 1;
+  perspective: 900px;
+  touch-action: pan-y;
+}
+.tilt-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.25s ease-out;
+}
+.tilt-glow {
+  position: absolute;
+  inset: 16%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, color-mix(in oklch, var(--glow) 70%, transparent), transparent 70%);
+  filter: blur(22px);
+  transform: translateZ(-30px);
+}
+.tilt-float {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: translateZ(40px);
+  animation: float 4s ease-in-out infinite;
+}
+.artwork-img {
+  filter: drop-shadow(0 14px 16px rgb(0 0 0 / 0.22));
+}
+.tilt-shadow {
+  position: absolute;
+  bottom: -2%;
+  left: 22%;
+  right: 22%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.3), transparent);
+  animation: shadow-pulse 4s ease-in-out infinite;
+}
+.dark .tilt-shadow {
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.6), transparent);
+}
+@media (hover: none) {
+  .tilt-card {
+    animation: sway 7s ease-in-out infinite;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+@keyframes shadow-pulse {
+  0%,
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+  50% {
+    scale: 0.8;
+    opacity: 0.65;
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    rotate: y -7deg;
+  }
+  50% {
+    rotate: y 7deg;
+  }
+}
+
+/* Pokemon swap */
+.card-exit {
+  animation: card-exit 0.26s ease-in forwards;
+}
+.card-enter {
+  animation: card-enter 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+}
+@keyframes card-exit {
+  to {
+    opacity: 0;
+    translate: -28px 0;
+    filter: blur(6px);
+  }
+}
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+.pokeflash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.9), transparent 55%);
+  animation: pokeflash 0.7s ease-out forwards;
+}
+.pokeflash svg {
+  animation: pokeflash-ball 0.7s ease-out forwards;
+}
+@keyframes pokeflash {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes pokeflash-ball {
+  from {
+    scale: 0.3;
+    rotate: -180deg;
+  }
+  to {
+    scale: 3;
+    rotate: 0deg;
+  }
+}
+
+.stat-bar {
+  transform-origin: left;
+  animation: stat-grow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+@keyframes stat-grow {
+  from {
+    scale: 0 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-exit,
+  .card-enter,
+  .stat-bar,
+  .tilt-card,
+  .tilt-float,
+  .tilt-shadow,
+  .watermark-in,
+  .watermark-out {
+    animation: none !important;
+  }
+  .pokeflash {
+    display: none;
+  }
+  .tilt-card,
+  .watermark-tint {
+    transition: none;
   }
 }

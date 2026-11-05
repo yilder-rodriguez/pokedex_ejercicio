@@ -1,6 +1,13 @@
 <!doctype html>
-<html lang="es" class="light">
+<html lang="es">
   <head>
+    <script>
+      try {
+        var t = localStorage.getItem('pokedex-theme')
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        document.documentElement.classList.add(t)
+      } catch (e) {}
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
