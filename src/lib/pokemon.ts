@@ -9,8 +9,12 @@ export type PokemonApiResponse = {
   stats: { base_stat: number; stat: { name: string } }[]
   sprites: {
     front_default: string | null
+    front_shiny: string | null
+    back_default: string | null
+    back_shiny: string | null
     other?: {
-      'official-artwork'?: { front_default: string | null }
+      home?: { front_default: string | null; front_shiny: string | null }
+      'official-artwork'?: { front_default: string | null; front_shiny?: string | null }
     }
   }
 }
@@ -34,6 +38,45 @@ export async function fetchPokemon(query: string): Promise<PokemonApiResponse> {
 
 export function getArtwork(p: PokemonApiResponse) {
   return p.sprites.other?.['official-artwork']?.front_default ?? p.sprites.front_default ?? ''
+}
+
+export function getImageCandidates(p: PokemonApiResponse, { shiny, back }: { shiny: boolean; back: boolean }) {
+  const s = p.sprites
+  const list = back
+    ? [shiny ? s.back_shiny : s.back_default]
+    : shiny
+      ? [s.other?.home?.front_shiny, s.other?.['official-artwork']?.front_shiny, s.front_shiny]
+      : [s.other?.home?.front_default, s.other?.['official-artwork']?.front_default, s.front_default]
+  return list.filter((url): url is string => Boolean(url))
+}
+
+export function isPixelSprite(url: string) {
+  return !url.includes('/other/')
+}
+
+export const TYPE_COLORS: Record<string, string> = {
+  normal: '#a8a77a',
+  fire: '#ee8130',
+  water: '#6390f0',
+  electric: '#f7d02c',
+  grass: '#7ac74c',
+  ice: '#96d9d6',
+  fighting: '#c22e28',
+  poison: '#a33ea1',
+  ground: '#e2bf65',
+  flying: '#a98ff3',
+  psychic: '#f95587',
+  bug: '#a6b91a',
+  rock: '#b6a136',
+  ghost: '#735797',
+  dragon: '#6f35fc',
+  dark: '#705746',
+  steel: '#b7b7ce',
+  fairy: '#d685ad',
+}
+
+export function getTypeColor(p: PokemonApiResponse) {
+  return TYPE_COLORS[p.types[0]?.type.name ?? ''] ?? '#ef4444'
 }
 
 export function spriteUrl(id: number) {
